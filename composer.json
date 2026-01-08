@@ -1,6 +1,8 @@
 {
     "name": "uiskz/travel",
     "description": "Common types and interfaces for travel content",
+    "keywords": ["travel", "provider"],
+    "homepage": "https://github.com/uiskz/travel",
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -13,6 +15,7 @@
             "email": "dg@uis.kz"
         }
     ],
-    "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "php": ">=8.0.0"
+    }
 }
