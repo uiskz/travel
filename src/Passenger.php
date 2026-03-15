@@ -11,21 +11,21 @@ namespace Uiskz\Travel;
  */
 class Passenger
 {
-    const TYPE_ADULT = 'ADT';
+    const string TYPE_ADULT = 'ADT';
 
-    const TYPE_CHILD = 'CHD';
+    const string TYPE_CHILD = 'CHD';
 
-    const TYPE_INFANT = 'INF';
+    const string TYPE_INFANT = 'INF';
 
-    const GENDER_MALE = 'M';
+    const string GENDER_MALE = 'M';
 
-    const GENDER_FEMALE = 'F';
+    const string GENDER_FEMALE = 'F';
 
-    const TITLE_MISTER = 'MR';
+    const string TITLE_MISTER = 'MR';
 
-    const TITLE_MISSES = 'MRS';
+    const string TITLE_MISSES = 'MRS';
 
-    const TITLE_MISS = 'MS';
+    const string TITLE_MISS = 'MS';
 
     public string $firstName;
 

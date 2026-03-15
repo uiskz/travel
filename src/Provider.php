@@ -11,17 +11,17 @@ namespace Uiskz\Travel;
  */
 class Provider
 {
-    const MODE_TEST = 'test';
+    const string MODE_TEST = 'test';
 
-    const MODE_LIVE = 'live';
+    const string MODE_LIVE = 'live';
 
-    const PROVIDER_TYPE_AIR = 'air';
+    const string PROVIDER_TYPE_AIR = 'air';
 
-    const PROVIDER_TYPE_ANY = 'any';
+    const string PROVIDER_TYPE_ANY = 'any';
 
-    const PROVIDER_TYPE_RAIL = 'rail';
+    const string PROVIDER_TYPE_RAIL = 'rail';
 
-    const PROVIDER_TYPE_HOTEL = 'hotel';
+    const string PROVIDER_TYPE_HOTEL = 'hotel';
 
     public int $providerID;
 

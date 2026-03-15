@@ -11,19 +11,19 @@ namespace Uiskz\Travel;
  */
 class Reservation
 {
-    const STATUS_CREATED = 'booked';
+    const string STATUS_CREATED = 'booked';
 
-    const STATUS_ISSUED = 'issued';
+    const string STATUS_ISSUED = 'issued';
 
-    const STATUS_CANCELLED = 'cancelled';
+    const string STATUS_CANCELLED = 'cancelled';
 
-    const STATUS_PARTIALLY_REFUNDED = 'partially-refunded';
+    const string STATUS_PARTIALLY_REFUNDED = 'partially-refunded';
 
-    const STATUS_REFUNDED = 'refunded';
+    const string STATUS_REFUNDED = 'refunded';
 
-    const STATUS_VOID = 'void';
+    const string STATUS_VOID = 'void';
 
-    const STATUS_PAID = 'paid';
+    const string STATUS_PAID = 'paid';
 
     public string $id;
 
