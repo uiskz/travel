@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Uiskz\Travel;
 
-use Yiisoft\Files\FileHelper;
 
 /**
  * Trait with helper functions to log request/response data. Depends on the `FileHelper` class from YiiSoft for
@@ -61,7 +61,7 @@ trait LoggingTrait
         }
         $parentDir = dirname($fileName);
         if (!file_exists($parentDir)) {
-            FileHelper::ensureDirectory($parentDir, 0777);
+            mkdir($parentDir, 0777, true);
         }
 
         file_put_contents($fileName, $message);

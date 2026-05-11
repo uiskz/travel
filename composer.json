@@ -17,7 +17,6 @@
     ],
     "require": {
         "php": ">=8.3.0",
-        "yiisoft/files": "^2.1",
         "ext-mbstring": "*"
     }
 }
