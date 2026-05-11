@@ -25,6 +25,8 @@ class Reservation
 
     const string STATUS_PAID = 'paid';
 
+    const string STATUS_EXPIRED = 'expired';
+
     public string $id;
 
     public string $status;
@@ -32,6 +34,8 @@ class Reservation
     public string $currency;
 
     public float $total;
+
+    public array $passengers = [];
 
     public array $remarks = [];
 
