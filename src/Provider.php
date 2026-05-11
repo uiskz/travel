@@ -11,6 +11,9 @@ namespace Uiskz\Travel;
  */
 class Provider
 {
+
+    use LoggingTrait;
+
     const string MODE_TEST = 'test';
 
     const string MODE_LIVE = 'live';
@@ -23,20 +26,22 @@ class Provider
 
     const string PROVIDER_TYPE_HOTEL = 'hotel';
 
-    public int $providerID;
+    protected string $mode = self::MODE_TEST;
 
-    public string $name;
-
-    public string $mode = self::MODE_TEST;
-
-    public function __construct(string $mode, int $providerID, array $config = [])
+    /**
+     * Constructor method to initialize the class with the provided configuration.
+     *
+     * @param array $config An associative array of configuration options to set class properties.
+     *
+     * @return void
+     */
+    public function __construct(array $config = [])
     {
-        $this->mode = $mode;
-        $this->providerID = $providerID;
         foreach ($config as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->$key = $value;
             }
         }
     }
+
 }
