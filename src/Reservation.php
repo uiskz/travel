@@ -35,6 +35,9 @@ class Reservation
 
     public float $total;
 
+    /**
+     * @var Passenger[]
+     */
     public array $passengers = [];
 
     public array $remarks = [];
