@@ -70,4 +70,14 @@ class BaseSearchTrip
         ];
     }
 
+    /**
+     * Converts the object to its string representation.
+     *
+     * @return string The concatenated string representation of the origin, destination, and date in 'Y-m-d' format.
+     */
+    public function __toString(): string
+    {
+        return $this->origin . '_' . $this->destination . '_' . $this->date->format('Y-m-d');
+    }
+
 }
