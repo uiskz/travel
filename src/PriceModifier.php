@@ -46,6 +46,9 @@ class PriceModifier
             throw new \InvalidArgumentException('Invalid subject');
         }
         $this->type = $type;
+        $this->passengerType = $passengerType;
         $this->amount = $amount;
+        $this->subject = $subject;
+
     }
 }
