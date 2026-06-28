@@ -9,7 +9,7 @@ namespace Uiskz\Travel;
  * @package Uiskz\Travel
  * @version 1.0.0
  */
-class Passenger
+class Traveler
 {
     const string TYPE_ADULT = 'ADT';
 
@@ -39,7 +39,7 @@ class Passenger
 
     public string $type;
 
-    public ?PassengerDocument $document = null;
+    public ?TravelerDocument $document = null;
 
     public ?ContactInformation $contacts = null;
 

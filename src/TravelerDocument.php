@@ -11,24 +11,36 @@ use DateTimeInterface;
  * @package Uiskz\Travel
  * @version 1.0.0
  */
-class PassengerDocument
+class TravelerDocument
 {
     /**
-     * National internal identity card
+     * National identity card
      */
     const int TYPE_NATIONAL_IDENTITY = 1;
 
     /**
-     * National internal passport
+     * International passport
      */
     const int TYPE_PASSPORT = 2;
 
+    /**
+     * National birth certificate
+     */
     const int TYPE_BIRTH_CERTIFICATE = 3;
 
+    /**
+     * National internal passport
+     */
     const int TYPE_INTERNAL_PASSPORT = 4;
 
+    /**
+     * Diplomatic passport
+     */
     const int TYPE_DIPLOMATIC_PASSPORT = 5;
 
+    /**
+     * Permanent residence permit
+     */
     const int TYPE_PERMANENT_RESIDENCE = 6;
 
     /**
