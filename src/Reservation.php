@@ -45,4 +45,26 @@ class Reservation
     public array $errors = [];
 
     public array $warnings = [];
+
+    public int $providerID = 0;
+
+    public string $mode = Provider::MODE_TEST;
+
+    public function getIdentity(): ReservationIdentity
+    {
+        $identity = new ReservationIdentity();
+        $identity->id = $this->id;
+
+        return $identity;
+    }
+
+    /**
+     * Method fills all the necessary data internal data used in our product
+     * @param CreateReservationParams $params
+     */
+    public function fillServiceData(CreateReservationParams $params): void
+    {
+        $this->providerID = $params->option->providerID;
+        $this->mode = $params->option->mode;
+    }
 }

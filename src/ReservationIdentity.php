@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Uiskz\Travel;
 
 /**
- * Base reservation identity class class
+ * Base reservation identity class
  * @author Dmitriy Gritsenko <dg@uis.kz>
  * @package Uiskz\Travel
  * @version 1.0.0
@@ -12,4 +12,6 @@ namespace Uiskz\Travel;
 class ReservationIdentity
 {
     public string $id;
+
+    public array $params;
 }

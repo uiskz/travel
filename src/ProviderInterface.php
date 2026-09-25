@@ -11,5 +11,5 @@ namespace Uiskz\Travel;
  */
 interface ProviderInterface
 {
-    public function createReservation(CreateReservationParams $parms): Reservation;
+    public function createReservation(CreateReservationParams $params): Reservation;
 }
