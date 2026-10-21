@@ -79,6 +79,8 @@ final class FeeView
      * per-owner tracking (or changed by legacy code) have amounts no owner accounts for: the
      * uncovered part of the consolidator bucket belongs to the root consolidator, of the agent
      * bucket to $legacyAgencyID (the order client, whose own rules produced agent fees before).
+     * The root consolidator never owns agent amounts, so for its own orders the agent buckets
+     * are left as they are.
      *
      * @param array<int, array<string, float>> $ownerFees
      * @return array<int, array<string, float>>
@@ -100,6 +102,9 @@ final class FeeView
             [$legacyAgencyID, $markupKind, $agencyMarkup, false],
         ];
         foreach ($buckets as [$ownerID, $kind, $bucket, $isRoot]) {
+            if (!$isRoot && $ownerID === AgencyChain::ROOT_ID) {
+                continue;
+            }
             $tracked = 0.0;
             foreach ($ownerFees as $trackedOwnerID => $fees) {
                 if (((int)$trackedOwnerID === AgencyChain::ROOT_ID) === $isRoot) {

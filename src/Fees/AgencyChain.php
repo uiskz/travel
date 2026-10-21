@@ -14,14 +14,26 @@ final class AgencyChain
 {
     public const ROOT_ID = 1;
 
+    /** @var int[] */
+    private readonly array $clients;
+
+    /** @var int[] */
+    private readonly array $owners;
+
     /**
-     * @param int[] $clients Client ids from the root consolidator down to the buyer
-     * @param int[] $owners Client ids of the chain that own rules, in the same order
+     * Ids are normalized to int, so ids loaded from the DB as strings are matched too.
+     *
+     * @param array<int|string> $clients Client ids from the root consolidator down to the buyer
+     * @param array<int|string> $owners Client ids of the chain that own rules, in the same order
+     * @throws \InvalidArgumentException if the chain has no clients
      */
-    public function __construct(
-        private readonly array $clients,
-        private readonly array $owners,
-    ) {
+    public function __construct(array $clients, array $owners)
+    {
+        if ($clients === []) {
+            throw new \InvalidArgumentException('Agency chain must contain at least one client');
+        }
+        $this->clients = array_values(array_map('intval', $clients));
+        $this->owners = array_values(array_map('intval', $owners));
     }
 
     /**

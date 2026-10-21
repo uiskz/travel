@@ -13,3 +13,11 @@ REQUIREMENTS
 
 The minimum requirement by this project is PHP 8.3.
 
+
+TESTS
+-----
+
+```
+composer install
+composer test
+```

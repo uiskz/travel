@@ -5,8 +5,7 @@ namespace Uiskz\Travel;
 
 
 /**
- * Trait with helper functions to log request/response data. Depends on the `FileHelper` class from YiiSoft for
- * recursive directory creation.
+ * Trait with helper functions to log request/response data.
  * @author Dmitriy Gritsenko <dg@uis.kz>
  * @package Uiskz\Travel
  * @version 1.0.0
@@ -33,17 +32,17 @@ trait LoggingTrait
     }
 
     /**
-     * Retrieves the full path to the logs directory for the current date in UTC.
+     * Retrieves the full path to the logs directory for the current date.
      *
      * The path includes year-month and day subdirectories, ensuring logs are organized by date.
      *
-     * @return string The full directory path for storing logs, based on the current date (UTC).
+     * @return string The full directory path (without a trailing slash) for storing logs, based on the current date
+     * in the default timezone.
      */
     protected function getLogsPath(): string
     {
         $date = new \DateTime();
-        return $this->logsPath . '/' . $date->format('Y-m') . '/'
-            . $date->format('d') . '/';
+        return $this->logsPath . '/' . $date->format('Y-m') . '/' . $date->format('d');
     }
 
     /**

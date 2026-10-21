@@ -46,8 +46,8 @@ class BaseSearchTrip
     private function parseDate(string $dateString): void
     {
         $dt = \DateTime::createFromFormat('Y-m-d', $dateString);
-        if ($dt === false) {
-            throw new \InvalidArgumentException(sprintf('Incorrect date format: %s. Required format "yyyy-mm-dd"', $data['departure']));
+        if ($dt === false || $dt->format('Y-m-d') !== $dateString) {
+            throw new \InvalidArgumentException(sprintf('Incorrect date format: %s. Required format "yyyy-mm-dd"', $dateString));
         }
         $dt->modify('today');
         $now = (new \DateTime())->modify('today');

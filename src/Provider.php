@@ -58,13 +58,7 @@ class Provider
     {
         foreach ($config as $key => $value) {
             if (property_exists($this, $key)) {
-                if ('int' == static::getPropertyType(static::class, $key)) {
-                    $this->$key = (int)$value;
-                } elseif ('float' == static::getPropertyType(static::class, $key)) {
-                    $this->$key = (float)$value;
-                } else {
-                    $this->$key = $value;
-                }
+                $this->$key = static::castPropertyValue(static::class, $key, $value);
             }
         }
     }
@@ -75,15 +69,39 @@ class Provider
     }
 
     /**
-     * Method returns Class property's data type
+     * Casts a config value to the type of the class property. Null stays null for nullable properties;
+     * untyped and union-typed properties get the value as is.
      * @param string $className
      * @param string $property
-     * @return string
+     * @param mixed $value
+     * @return mixed
      * @throws \ReflectionException
      */
-    protected static function getPropertyType(string $className, string $property): string
+    protected static function castPropertyValue(string $className, string $property, mixed $value): mixed
     {
-        $rp = new ReflectionProperty($className, $property);
-        return $rp->getType()->getName();
+        $type = (new ReflectionProperty($className, $property))->getType();
+        if ($value === null && $type?->allowsNull()) {
+            return null;
+        }
+
+        return match (static::getPropertyType($className, $property)) {
+            'int' => (int)$value,
+            'float' => (float)$value,
+            'bool' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+            default => $value,
+        };
+    }
+
+    /**
+     * Method returns Class property's data type, or null for untyped and union-typed properties
+     * @param string $className
+     * @param string $property
+     * @return string|null
+     * @throws \ReflectionException
+     */
+    protected static function getPropertyType(string $className, string $property): ?string
+    {
+        $type = (new ReflectionProperty($className, $property))->getType();
+        return $type instanceof \ReflectionNamedType ? $type->getName() : null;
     }
 }

@@ -29,7 +29,7 @@ class Traveler
 
     public string $firstName;
 
-    public ?string $middleName;
+    public ?string $middleName = null;
 
     public string $lastName;
 

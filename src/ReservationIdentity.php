@@ -13,5 +13,5 @@ class ReservationIdentity
 {
     public string $id;
 
-    public array $params;
+    public array $params = [];
 }
