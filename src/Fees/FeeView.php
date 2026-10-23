@@ -12,15 +12,19 @@ namespace Uiskz\Travel\Fees;
  * | own                      | agencyServiceFee       | agencyHiddenFee        |
  * | direct parent            | consolidatorServiceFee | parentHiddenFee        |
  * | above the parent         | providerServiceFee     | upperHiddenFee         |
- * | below the viewer         | not shown              | not shown              |
+ * | direct child of the root | agencyServiceFee       | agencyHiddenFee        |
+ * | other agencies below     | not shown              | not shown              |
  *
- * Products decide how parent/upper hidden fees are shown (air: taxes AD and SFS).
+ * A viewer who may not add service fees of its own ($parentServiceFeeShown = false) gets the parent's
+ * service fee in providerServiceFee. Products decide how parent/upper hidden fees and provider
+ * service fees are shown (air: taxes AD and SFS).
  */
 final class FeeView
 {
     public function __construct(
         public readonly AgencyChain $chain,
         public readonly int $viewerID,
+        public readonly bool $parentServiceFeeShown = true,
     ) {
     }
 
@@ -57,12 +61,25 @@ final class FeeView
                     }
                     break;
                 case FeeLevel::Parent:
-                    $projection->consolidatorServiceFee += $service;
+                    if ($this->parentServiceFeeShown) {
+                        $projection->consolidatorServiceFee += $service;
+                    } else {
+                        $projection->providerServiceFee += $service;
+                    }
                     $projection->parentHiddenFee += $markup;
                     break;
                 case FeeLevel::Upper:
                     $projection->providerServiceFee += $service;
                     $projection->upperHiddenFee += $markup;
+                    break;
+                case FeeLevel::Child:
+                    if ($this->viewerIsRoot()) {
+                        $projection->agencyServiceFee += $service;
+                        $projection->agencyHiddenFee += $markup;
+                    } else {
+                        $projection->downstreamServiceFee += $service;
+                        $projection->downstreamHiddenFee += $markup;
+                    }
                     break;
                 case FeeLevel::Downstream:
                     $projection->downstreamServiceFee += $service;

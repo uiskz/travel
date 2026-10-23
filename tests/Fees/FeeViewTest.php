@@ -17,9 +17,9 @@ final class FeeViewTest extends TestCase
         7 => [FeeKind::SERVICE => 30, FeeKind::MARKUP => 3, FeeKind::VOID_SERVICE => 300, FeeKind::VOID_MARKUP => 3000],
     ];
 
-    private function view(int $viewerID): FeeView
+    private function view(int $viewerID, bool $parentServiceFeeShown = true): FeeView
     {
-        return new FeeView(new AgencyChain([1, 5, 7, 9], [1, 5, 7]), $viewerID);
+        return new FeeView(new AgencyChain([1, 5, 7, 9], [1, 5, 7]), $viewerID, $parentServiceFeeShown);
     }
 
     public function testViewerIsRoot(): void
@@ -39,13 +39,24 @@ final class FeeViewTest extends TestCase
 
         $this->assertSame(10.0, $projection->consolidatorServiceFee);
         $this->assertSame(1.0, $projection->consolidatorHiddenFee);
-        $this->assertSame(0.0, $projection->agencyServiceFee);
-        $this->assertSame(0.0, $projection->agencyHiddenFee);
+        $this->assertSame(20.0, $projection->agencyServiceFee);
+        $this->assertSame(2.0, $projection->agencyHiddenFee);
         $this->assertSame(0.0, $projection->providerServiceFee);
         $this->assertSame(0.0, $projection->parentHiddenFee);
         $this->assertSame(0.0, $projection->upperHiddenFee);
-        $this->assertSame(50.0, $projection->downstreamServiceFee);
-        $this->assertSame(5.0, $projection->downstreamHiddenFee);
+        $this->assertSame(30.0, $projection->downstreamServiceFee);
+        $this->assertSame(3.0, $projection->downstreamHiddenFee);
+    }
+
+    public function testProjectForSubAgentWithoutServiceFees(): void
+    {
+        $projection = $this->view(5, false)->project(self::FEES);
+
+        $this->assertSame(0.0, $projection->consolidatorServiceFee);
+        $this->assertSame(10.0, $projection->providerServiceFee);
+        $this->assertSame(1.0, $projection->parentHiddenFee);
+        $this->assertSame(20.0, $projection->agencyServiceFee);
+        $this->assertSame(2.0, $projection->agencyHiddenFee);
     }
 
     public function testProjectForSubAgent(): void

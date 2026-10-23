@@ -101,6 +101,7 @@ final class AgencyChain
             $distance === 0 => FeeLevel::Own,
             $distance === 1 => FeeLevel::Parent,
             $distance > 1 => FeeLevel::Upper,
+            $distance === -1 => FeeLevel::Child,
             default => FeeLevel::Downstream,
         };
     }

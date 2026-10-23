@@ -12,7 +12,7 @@ final class FeeSlot
     /** consolidatorServiceFee / consolidator markup */
     public const CONSOLIDATOR = 'consolidator';
 
-    /** agencyServiceFee (agentFee) / agency markup */
+    /** agencyServiceFee (agentFee) / agency markup; for the root also its child agency's fees */
     public const AGENCY = 'agency';
 
     /** providerServiceFee / markups of upper agencies */
@@ -27,7 +27,21 @@ final class FeeSlot
             FeeLevel::Own => $viewerIsRoot ? self::CONSOLIDATOR : self::AGENCY,
             FeeLevel::Parent => self::CONSOLIDATOR,
             FeeLevel::Upper => self::PROVIDER,
+            FeeLevel::Child => $viewerIsRoot ? self::AGENCY : self::DOWNSTREAM,
             FeeLevel::Downstream => self::DOWNSTREAM,
         };
+    }
+
+    /**
+     * Slot of a service fee. Same as {@see forLevel()}, except that a viewer who may not add service
+     * fees of its own sees the parent's service fee in the provider slot (air: tax SFS).
+     */
+    public static function forServiceFee(FeeLevel $level, bool $viewerIsRoot, bool $parentServiceFeeShown): string
+    {
+        if ($level === FeeLevel::Parent && !$viewerIsRoot && !$parentServiceFeeShown) {
+            return self::PROVIDER;
+        }
+
+        return self::forLevel($level, $viewerIsRoot);
     }
 }
