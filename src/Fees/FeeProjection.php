@@ -6,7 +6,7 @@ namespace Uiskz\Travel\Fees;
 /**
  * Fees of a price line as one viewer sees them.
  *
- * Hidden fees of the parent agency are shown as tax AD, hidden fees of upper agencies as tax SFS.
+ * Hidden fees of the parent agency are shown as tax AD, hidden fees of upper agencies as tax AW.
  * Downstream amounts are kept for completeness and never shown.
  */
 final class FeeProjection
@@ -24,7 +24,7 @@ final class FeeProjection
     /** Parent agency markup, shown as tax AD */
     public float $parentHiddenFee = 0.0;
 
-    /** Markups of the agencies above the parent, shown as tax SFS */
+    /** Markups of the agencies above the parent, shown as tax AW */
     public float $upperHiddenFee = 0.0;
 
     public float $downstreamServiceFee = 0.0;

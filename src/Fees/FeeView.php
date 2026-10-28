@@ -17,7 +17,7 @@ namespace Uiskz\Travel\Fees;
  *
  * A viewer who may not add service fees of its own ($parentServiceFeeShown = false) gets the parent's
  * service fee in providerServiceFee. Products decide how parent/upper hidden fees and provider
- * service fees are shown (air: taxes AD and SFS).
+ * service fees are shown (air: taxes AD and AW).
  */
 final class FeeView
 {

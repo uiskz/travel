@@ -34,7 +34,7 @@ final class FeeSlot
 
     /**
      * Slot of a service fee. Same as {@see forLevel()}, except that a viewer who may not add service
-     * fees of its own sees the parent's service fee in the provider slot (air: tax SFS).
+     * fees of its own sees the parent's service fee in the provider slot (air: tax AW).
      */
     public static function forServiceFee(FeeLevel $level, bool $viewerIsRoot, bool $parentServiceFeeShown): string
     {
