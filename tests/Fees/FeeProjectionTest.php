@@ -18,6 +18,7 @@ final class FeeProjectionTest extends TestCase
         $other->providerServiceFee = 5;
         $other->parentHiddenFee = 6;
         $other->upperHiddenFee = 7;
+        $other->rootHiddenFee = 10;
         $other->downstreamServiceFee = 8;
         $other->downstreamHiddenFee = 9;
 
@@ -33,6 +34,7 @@ final class FeeProjectionTest extends TestCase
         $this->assertSame(15.0, $total->providerServiceFee);
         $this->assertSame(18.0, $total->parentHiddenFee);
         $this->assertSame(21.0, $total->upperHiddenFee);
+        $this->assertSame(30.0, $total->rootHiddenFee);
         $this->assertSame(24.0, $total->downstreamServiceFee);
         $this->assertSame(27.0, $total->downstreamHiddenFee);
     }

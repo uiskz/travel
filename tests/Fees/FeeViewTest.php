@@ -44,6 +44,7 @@ final class FeeViewTest extends TestCase
         $this->assertSame(0.0, $projection->providerServiceFee);
         $this->assertSame(0.0, $projection->parentHiddenFee);
         $this->assertSame(0.0, $projection->upperHiddenFee);
+        $this->assertSame(0.0, $projection->rootHiddenFee);
         $this->assertSame(30.0, $projection->downstreamServiceFee);
         $this->assertSame(3.0, $projection->downstreamHiddenFee);
     }
@@ -54,7 +55,8 @@ final class FeeViewTest extends TestCase
 
         $this->assertSame(0.0, $projection->consolidatorServiceFee);
         $this->assertSame(10.0, $projection->providerServiceFee);
-        $this->assertSame(1.0, $projection->parentHiddenFee);
+        $this->assertSame(1.0, $projection->rootHiddenFee);
+        $this->assertSame(0.0, $projection->parentHiddenFee);
         $this->assertSame(20.0, $projection->agencyServiceFee);
         $this->assertSame(2.0, $projection->agencyHiddenFee);
     }
@@ -64,7 +66,9 @@ final class FeeViewTest extends TestCase
         $projection = $this->view(5)->project(self::FEES);
 
         $this->assertSame(10.0, $projection->consolidatorServiceFee);
-        $this->assertSame(1.0, $projection->parentHiddenFee);
+        // The root consolidator's markup is kept apart even when the root is the parent
+        $this->assertSame(1.0, $projection->rootHiddenFee);
+        $this->assertSame(0.0, $projection->parentHiddenFee);
         $this->assertSame(20.0, $projection->agencyServiceFee);
         $this->assertSame(2.0, $projection->agencyHiddenFee);
         $this->assertSame(0.0, $projection->consolidatorHiddenFee);
@@ -78,8 +82,10 @@ final class FeeViewTest extends TestCase
     {
         $projection = $this->view(9)->project(self::FEES);
 
+        // Service fees of the root (10) and of sub-agent 5 (20) are above the parent 7
         $this->assertSame(30.0, $projection->providerServiceFee);
-        $this->assertSame(3.0, $projection->upperHiddenFee);
+        $this->assertSame(1.0, $projection->rootHiddenFee);
+        $this->assertSame(2.0, $projection->upperHiddenFee);
         $this->assertSame(30.0, $projection->consolidatorServiceFee);
         $this->assertSame(3.0, $projection->parentHiddenFee);
         $this->assertSame(0.0, $projection->agencyServiceFee);
@@ -96,6 +102,27 @@ final class FeeViewTest extends TestCase
 
         $this->assertSame(30.0, $projection->providerServiceFee);
         $this->assertSame(2.0, $projection->upperHiddenFee);
+        $this->assertSame(0.0, $projection->rootHiddenFee);
+    }
+
+    /**
+     * Consolidator 1 -> KTI 5 -> sub-agent 7 (order 10414): the sub-agent sees KTI's service fee as a fee,
+     * the consolidator's markup apart from KTI's markup and the consolidator's service fee as hidden.
+     */
+    public function testProjectForSubAgentOfSubAgentSeparatesRootMarkup(): void
+    {
+        $projection = (new FeeView(new AgencyChain([1, 5, 7], [1, 5, 7]), 7))->project([
+            1 => [FeeKind::SERVICE => 3000, FeeKind::MARKUP => 4000],
+            5 => [FeeKind::SERVICE => 1000, FeeKind::MARKUP => 2000],
+            7 => [FeeKind::SERVICE => 20000],
+        ]);
+
+        $this->assertSame(1000.0, $projection->consolidatorServiceFee);
+        $this->assertSame(20000.0, $projection->agencyServiceFee);
+        $this->assertSame(4000.0, $projection->rootHiddenFee);
+        $this->assertSame(3000.0, $projection->providerServiceFee);
+        $this->assertSame(2000.0, $projection->parentHiddenFee);
+        $this->assertSame(0.0, $projection->upperHiddenFee);
     }
 
     public function testProjectUsesRequestedKinds(): void
@@ -103,7 +130,7 @@ final class FeeViewTest extends TestCase
         $projection = $this->view(5)->project(self::FEES, FeeKind::VOID_SERVICE, FeeKind::VOID_MARKUP);
 
         $this->assertSame(100.0, $projection->consolidatorServiceFee);
-        $this->assertSame(1000.0, $projection->parentHiddenFee);
+        $this->assertSame(1000.0, $projection->rootHiddenFee);
         $this->assertSame(200.0, $projection->agencyServiceFee);
         $this->assertSame(2000.0, $projection->agencyHiddenFee);
     }

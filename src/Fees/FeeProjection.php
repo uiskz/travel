@@ -6,8 +6,9 @@ namespace Uiskz\Travel\Fees;
 /**
  * Fees of a price line as one viewer sees them.
  *
- * Hidden fees of the parent agency are shown as tax AD, hidden fees of upper agencies as tax AW.
- * Downstream amounts are kept for completeness and never shown.
+ * A non-root viewer sees the root consolidator's markup apart (air: tax AD) from the markups of the
+ * agencies between the root and the viewer (air: tax S2); service fees it may not see as fees are in
+ * providerServiceFee (air: tax AW). Downstream amounts are kept for completeness and never shown.
  */
 final class FeeProjection
 {
@@ -21,11 +22,14 @@ final class FeeProjection
 
     public float $providerServiceFee = 0.0;
 
-    /** Parent agency markup, shown as tax AD */
+    /** Markup of the parent agency when it is not the root consolidator */
     public float $parentHiddenFee = 0.0;
 
-    /** Markups of the agencies above the parent, shown as tax AW */
+    /** Markups of the agencies above the parent, the root consolidator excluded */
     public float $upperHiddenFee = 0.0;
+
+    /** Markup of the root consolidator seen by a non-root viewer */
+    public float $rootHiddenFee = 0.0;
 
     public float $downstreamServiceFee = 0.0;
 

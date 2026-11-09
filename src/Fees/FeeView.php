@@ -10,14 +10,15 @@ namespace Uiskz\Travel\Fees;
  * |--------------------------|------------------------|------------------------|
  * | own, viewer is the root  | consolidatorServiceFee | consolidatorHiddenFee  |
  * | own                      | agencyServiceFee       | agencyHiddenFee        |
+ * | root, viewer is not root | as parent / above      | rootHiddenFee          |
  * | direct parent            | consolidatorServiceFee | parentHiddenFee        |
  * | above the parent         | providerServiceFee     | upperHiddenFee         |
  * | direct child of the root | agencyServiceFee       | agencyHiddenFee        |
  * | other agencies below     | not shown              | not shown              |
  *
  * A viewer who may not add service fees of its own ($parentServiceFeeShown = false) gets the parent's
- * service fee in providerServiceFee. Products decide how parent/upper hidden fees and provider
- * service fees are shown (air: taxes AD and AW).
+ * service fee in providerServiceFee. Products decide how root/parent/upper hidden fees and provider
+ * service fees are shown (air: root markup AD, provider service fees AW, other agencies' markups S2).
  */
 final class FeeView
 {
@@ -66,11 +67,19 @@ final class FeeView
                     } else {
                         $projection->providerServiceFee += $service;
                     }
-                    $projection->parentHiddenFee += $markup;
+                    if ((int)$ownerID === AgencyChain::ROOT_ID) {
+                        $projection->rootHiddenFee += $markup;
+                    } else {
+                        $projection->parentHiddenFee += $markup;
+                    }
                     break;
                 case FeeLevel::Upper:
                     $projection->providerServiceFee += $service;
-                    $projection->upperHiddenFee += $markup;
+                    if ((int)$ownerID === AgencyChain::ROOT_ID) {
+                        $projection->rootHiddenFee += $markup;
+                    } else {
+                        $projection->upperHiddenFee += $markup;
+                    }
                     break;
                 case FeeLevel::Child:
                     if ($this->viewerIsRoot()) {
