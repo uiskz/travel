@@ -47,6 +47,15 @@ final class FeeViewTest extends TestCase
         $this->assertFalse((new FeeView(new AgencyChain([1, 5], [1, 5]), 5))->hasSubAgentLevels());
     }
 
+    public function testFeesBelowViewerAreNotPartOfItsPrice(): void
+    {
+        // Chain 1 -> 5 -> 7 -> 9, fees of 1/5/7: service 10/20/30, markup 1/2/3
+        $this->assertSame(55.0, $this->view(1)->feesBelowViewer($this->view(1)->project(self::FEES)));
+        $this->assertSame(33.0, $this->view(5)->feesBelowViewer($this->view(5)->project(self::FEES)));
+        $this->assertSame(0.0, $this->view(7)->feesBelowViewer($this->view(7)->project(self::FEES)));
+        $this->assertSame(0.0, $this->view(9)->feesBelowViewer($this->view(9)->project(self::FEES)));
+    }
+
     public function testLevel(): void
     {
         $this->assertSame(FeeLevel::Parent, $this->view(7)->level(5));

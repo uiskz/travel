@@ -54,6 +54,23 @@ final class FeeView
         return false;
     }
 
+    /**
+     * Service fees and markups of the levels below the viewer, which are not part of the viewer's
+     * price: each level sees the price up to its own fees (the root consolidator: the net price
+     * plus its own fees; a sub-agent: plus the fees of the agencies above it and its own fees;
+     * the buyer: the full price). For the root these are its child agency's fees (agency* fields)
+     * and the downstream ones, for any other viewer the downstream ones.
+     */
+    public function feesBelowViewer(FeeProjection $fees): float
+    {
+        $amount = $fees->downstreamServiceFee + $fees->downstreamHiddenFee;
+        if ($this->viewerIsRoot()) {
+            $amount += $fees->agencyServiceFee + $fees->agencyHiddenFee;
+        }
+
+        return round($amount, 2);
+    }
+
     public function level(int $ownerID): FeeLevel
     {
         return $this->chain->relation($this->viewerID, $ownerID);
