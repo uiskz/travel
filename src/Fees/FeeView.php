@@ -34,6 +34,26 @@ final class FeeView
         return $this->viewerID === AgencyChain::ROOT_ID;
     }
 
+    /**
+     * Whether the chain has fee owners (agencies) below the viewer's agent level, i.e. whether
+     * sub-agent fees (downstream* of {@see project()}) can exist at all: the root consolidator's
+     * agent level is its first-level sub-agent, any other viewer is its own agent level. A viewer
+     * looking at an order of its own company, or of its corporate client (which owns no fees), or
+     * a viewer outside the chain (who sees the price as the buyer) has none.
+     */
+    public function hasSubAgentLevels(): bool
+    {
+        $viewerDepth = $this->chain->depthOf($this->viewerID) ?? count($this->chain->clients()) - 1;
+        $agentDepth = $this->viewerIsRoot() ? $viewerDepth + 1 : $viewerDepth;
+        foreach ($this->chain->owners() as $ownerID) {
+            if (($this->chain->depthOf($ownerID) ?? -1) > $agentDepth) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function level(int $ownerID): FeeLevel
     {
         return $this->chain->relation($this->viewerID, $ownerID);

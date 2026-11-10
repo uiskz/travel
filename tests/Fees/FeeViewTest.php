@@ -28,6 +28,25 @@ final class FeeViewTest extends TestCase
         $this->assertFalse($this->view(5)->viewerIsRoot());
     }
 
+    public function testSubAgentLevelsExistOnlyBelowTheViewersAgentLevel(): void
+    {
+        // Chain 1 -> 5 -> 7 -> corporate 9: the root's agent level is 5, so 7 is its sub-agent
+        $this->assertTrue($this->view(1)->hasSubAgentLevels());
+        $this->assertTrue($this->view(5)->hasSubAgentLevels());
+        // Below 7 there is only its corporate client, which owns no fees
+        $this->assertFalse($this->view(7)->hasSubAgentLevels());
+        // Order of the viewer's own company
+        $this->assertFalse($this->view(9)->hasSubAgentLevels());
+        $this->assertFalse((new FeeView(new AgencyChain([1, 5, 7], [1, 5, 7]), 7))->hasSubAgentLevels());
+        $this->assertTrue((new FeeView(new AgencyChain([1, 5, 7], [1, 5, 7]), 5))->hasSubAgentLevels());
+        // A viewer outside the chain sees the price as the buyer
+        $this->assertFalse($this->view(42)->hasSubAgentLevels());
+        // The root's own order and an order of its first-level sub-agent
+        $this->assertFalse((new FeeView(new AgencyChain([1], [1]), 1))->hasSubAgentLevels());
+        $this->assertFalse((new FeeView(new AgencyChain([1, 5], [1, 5]), 1))->hasSubAgentLevels());
+        $this->assertFalse((new FeeView(new AgencyChain([1, 5], [1, 5]), 5))->hasSubAgentLevels());
+    }
+
     public function testLevel(): void
     {
         $this->assertSame(FeeLevel::Parent, $this->view(7)->level(5));
